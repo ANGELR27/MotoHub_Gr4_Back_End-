@@ -17,6 +17,9 @@ public class User {
     private String email;
     private String password;
 
+    // 👇 Nuevo campo para roles
+    private String role;  // "ROLE_USER" o "ROLE_ADMIN"
+
     // Getters y Setters
     public int getId() {
         return id;
@@ -51,5 +54,13 @@ public class User {
     }
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    // 👇 Getters y setters para role
+    public String getRole() {
+        return role;
+    }
+    public void setRole(String role) {
+        this.role = role;
     }
 }

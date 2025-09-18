@@ -21,23 +21,23 @@ public class ProductController {
         return ResponseEntity.ok(productService.save(product));
     }
 
-    // Listar todos
+    // Listar todos los productos
     @GetMapping
     public ResponseEntity<List<Product>> getAll() {
         return ResponseEntity.ok(productService.findAll());
     }
 
-    // Obtener por ID
+    // Obtener producto por ID
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getById(@PathVariable int id) {
+    public ResponseEntity<Product> getById(@PathVariable Long id) {
         return productService.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // Actualizar
+    // Actualizar producto
     @PutMapping("/{id}")
-    public ResponseEntity<Product> update(@PathVariable int id, @RequestBody Product product) {
+    public ResponseEntity<Product> update(@PathVariable Long id, @RequestBody Product product) {
         return productService.findById(id)
                 .map(existing -> {
                     product.setId(id);
@@ -46,9 +46,9 @@ public class ProductController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // Eliminar
+    // Eliminar producto
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable int id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         if (productService.findById(id).isPresent()) {
             productService.delete(id);
             return ResponseEntity.noContent().build();
