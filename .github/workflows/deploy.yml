@@ -44,7 +44,7 @@ jobs:
 
       - name: Build Docker image (no cache)
         run: |
-          docker build --no-cache -t ${{ secrets.ECR_REPOSITORY_URI }}:latest .
+          docker buildx build --no-cache -t ${{ secrets.ECR_REPOSITORY_URI }}:latest .
 
       - name: Push Docker image to ECR
         run: |
