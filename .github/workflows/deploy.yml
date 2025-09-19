@@ -32,15 +32,25 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Build Docker image with Buildx (no cache)
+      - name: Build JAR with Maven
+        run: mvn clean package -DskipTests
+
+      - name: Confirm JAR exists
         run: |
-          docker buildx build --no-cache -t ${{ secrets.ECR_REPOSITORY_URI }}:latest . --load
+          set -e
+          ls -l target
+          JAR=$(ls target/*.jar | head -n1)
+          echo "Found JAR: $JAR"
+
+      - name: Build Docker image (no cache)
+        run: |
+          docker build --no-cache -t ${{ secrets.ECR_REPOSITORY_URI }}:latest .
 
       - name: Push Docker image to ECR
         run: |
           docker push ${{ secrets.ECR_REPOSITORY_URI }}:latest
 
-      - name: Trigger App Runner deployment
+      - name: Trigger App Runner deployment (start-deployment)
         run: |
           aws apprunner start-deployment \
           --service-arn ${{ secrets.APP_RUNNER_SERVICE_ARN }}
