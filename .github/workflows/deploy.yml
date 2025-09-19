@@ -18,8 +18,9 @@ jobs:
           distribution: temurin
           java-version: 17
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+      # Eliminamos la configuración de Buildx
+      # - name: Set up Docker Buildx
+      #   uses: docker/setup-buildx-action@v2
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
@@ -42,9 +43,9 @@ jobs:
           JAR=$(ls target/*.jar | head -n1)
           echo "Found JAR: $JAR"
 
-      - name: Build Docker image with Buildx (no cache)
+      - name: Build Docker image with traditional Docker (no cache)
         run: |
-          docker buildx build --no-cache -t ${{ secrets.ECR_REPOSITORY_URI }}:latest . --load
+          docker build --no-cache -t ${{ secrets.ECR_REPOSITORY_URI }}:latest .
 
       - name: Push Docker image to ECR
         run: |
