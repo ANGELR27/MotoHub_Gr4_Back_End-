@@ -32,8 +32,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String path = request.getServletPath();
 
-        // 👉 Saltar validación JWT en endpoints públicos (auth, admin y productos)
-        if (path.startsWith("/auth/") || path.startsWith("/admin/") || path.startsWith("/products")) {
+        // 👉 Saltar validación JWT en endpoints públicos
+        if (path.startsWith("/auth/")
+                || path.startsWith("/admin/")
+                || path.startsWith("/user/")
+                || path.startsWith("/products")) {
             System.out.println("Bypass JWT en: " + path);
             filterChain.doFilter(request, response);
             return;

@@ -18,6 +18,7 @@ import java.util.Arrays;
 
 import com.motohub.security.JwtAuthenticationFilter;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.http.HttpMethod;
 
 @Configuration
 @EnableWebSecurity  // Habilita la seguridad en Spring
@@ -31,18 +32,13 @@ public class SecurityConfig {
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))  // Sin sesiones
                 .authorizeHttpRequests(auth -> auth
                         // 🔓 Endpoints públicos
-                        .requestMatchers(
-                                "/auth/register",       // Permitir registro de usuario sin autenticación
-                                "/auth/login",          // Permitir login de usuario sin autenticación
-                                "/admin/login",         // Permitir login de admin sin autenticación
-                                "/admin/register",      // Permitir registro de admin sin autenticación
-                                "/user/register",       // Permitir registro de usuario sin autenticación
-                                "/user/login",          // Permitir login de usuario sin autenticación
-                                "/products",            // Permitir crear productos sin autenticación
-                                "/products/**"          // Permitir todas las rutas relacionadas con productos
-                        ).permitAll()
+                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/admin/**").permitAll()
+                        .requestMatchers("/user/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/products/**").permitAll()   // Permitir listar productos
+                        .requestMatchers(HttpMethod.POST, "/products").permitAll()    // Permitir crear productos
                         // 🔒 El resto requiere autenticación
-                        .anyRequest().authenticated()  // Todo lo demás requiere autenticación
+                        .anyRequest().authenticated()
                 )
                 .headers(headers -> headers.frameOptions(frame -> frame.disable()))  // Desactiva las cabeceras de seguridad
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);  // Filtro JWT antes del de autenticación
